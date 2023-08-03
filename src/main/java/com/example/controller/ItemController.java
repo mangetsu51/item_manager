@@ -18,6 +18,8 @@ import com.example.service.ItemService;
 import com.example.entity.Category;
 import com.example.service.CategoryService;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 @RequestMapping("/item")
@@ -87,5 +89,15 @@ public class ItemController {
 		return "redirect:/item";
 	}
 	
+	@PostMapping(path = "stock/{id}",params = "in")
+	public String nyuka(@PathVariable("id") Integer id, @RequestParam("stock") Integer inputValue) {
+		this.itemService.nyuka(id, inputValue);
+		return "redirect:/item";	
+	}
 	
+	@PostMapping(path = "stock/{id}",params = "out")
+	public String syukka(@PathVariable("id") Integer id, @RequestParam("stock") Integer inputValue) {
+		this.itemService.shukka(id, inputValue);
+		return "redirect:/item";	
+	}
 }
