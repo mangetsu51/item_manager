@@ -10,6 +10,9 @@ import javax.persistence.Table;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 @Entity
 @Table(name = "items")
 public class Item {
@@ -60,6 +63,24 @@ public class Item {
 	public void setDeletedAt(LocalDateTime deletedAt) {
 		this.deletedAt = deletedAt;
 	}
-
 	
+	@Column(name = "CATEGORY_ID")
+	private Integer categoryId;
+	
+	public Integer getCategoryId() {
+		return this.categoryId;
+	}
+	
+	public void setCategoryId(Integer categoryId) {
+		this.categoryId = categoryId;
+	}
+	
+	@ManyToOne
+	@JoinColumn(name = "category_id", insertable = false, updatable = false)
+	private Category category;
+	
+	public Category getCategory() {
+		return this.category;
+	}
+
 }
