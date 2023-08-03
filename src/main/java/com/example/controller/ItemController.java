@@ -15,6 +15,9 @@ import com.example.entity.Item;
 import com.example.form.ItemForm;
 import com.example.service.ItemService;
 
+import com.example.entity.Category;
+import com.example.service.CategoryService;
+
 
 @Controller
 @RequestMapping("/item")
@@ -22,22 +25,27 @@ public class ItemController {
 	
 	private final ItemService itemService;
 	
+	private final CategoryService categoryService;
+	
 	@Autowired
-	public ItemController(ItemService itemService) {
-		this.itemService = itemService;
+	public ItemController(ItemService itemService , CategoryService categoryService) {
+		this.itemService   = itemService;
+		this.categoryService = categoryService;
 	}
 	
 	// 商品一覧の表示
 	@GetMapping
 	public String index(Model model) {
 		List<Item> items = this.itemService.findByDeletedAtIsNull();
-		model.addAttribute("item", items);
+		model.addAttribute("items", items);
 		return "item/index";
 	}
 	
 	// 商品登録ページ表示用
 	@GetMapping("toroku")
-	public String torokuPage(@ModelAttribute("itemForm") ItemForm itemForm) {
+	public String torokuPage(@ModelAttribute("itemForm") ItemForm itemForm, Model model) {
+		List<Category> categories = this.categoryService.findAll();
+		model.addAttribute("categories", categories);
 		return "item/torokuPage";
 	}
 	
@@ -55,7 +63,13 @@ public class ItemController {
 		Item item = this.itemService.findById(id);
 		itemForm.setName(item.getName());
 		itemForm.setPrice(item.getPrice());
+		itemForm.setCategoryId(item.getCategoryId());
+		
+		List<Category> categories = this.categoryService.findAll();
+		
 		model.addAttribute("id", id);
+		
+		model.addAttribute("categories",categories);
 		return "item/henshuPage";
 	}
 
@@ -72,4 +86,6 @@ public class ItemController {
 		this.itemService.delete(id);
 		return "redirect:/item";
 	}
-	}
+	
+	
+}
